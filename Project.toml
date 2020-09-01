@@ -4,5 +4,7 @@ authors = ["Adam Paxton <adampaxton9973@gmail.com>"]
 version = "0.1.0"
 
 [deps]
+Hungarian = "e91730f6-4275-51fb-a7a0-7064cfbd3b39"
+LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
 PyCall = "438e738f-606a-5dbb-bf0a-cddfbfd45ab0"
 StatsBase = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"
