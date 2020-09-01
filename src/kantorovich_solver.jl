@@ -1,6 +1,13 @@
-#We will make use of the linear optimization solver provided within the scipy.optimize package.
+# We will make use of the linear optimization solver provided within the scipy.optimize package, via the PyCall package.
+# This requires some delicacy, see https://github.com/JuliaPy/PyCall.jl#using-pycall-from-julia-modules
 using PyCall
-spop = pyimport("scipy.optimize")
+
+const scipy_opt = PyNULL()
+
+function __init__()
+    copy!(scipy_opt, pyimport_conda("scipy.optimize", "scipy"))
+end
+
 using StatsBase
 
 include("cost_functions.jl")
@@ -23,12 +30,12 @@ function solve_kantorovich(H1::Histogram, H2::Histogram)
     end
     m = length(P)
     n = length(Q)
-    # Reshape the cost matrix into a vector. we will work with row-major convention, but Julia uses column-major by default. Hence the transpose.
+    # Reshape the cost matrix into a vector. We will work with row-major convention, but Julia uses column-major by default, hence the transpose.
     c = vec(c')
     # Define our constraint matrix A such that the constraints
     # \sum_j π[i,j] = P[i], \sum_i π[i,j] = Q[j]
     # can be put in canonical form \sum_r A[r,k] x[r] = b[k]
-    # To this end, we will introduce the row-major form function
+    # To this end, we introduce the row-major form function
     function row_major(i::Int,j::Int)
         n*(i-1)+j
     end
@@ -49,7 +56,7 @@ function solve_kantorovich(H1::Histogram, H2::Histogram)
     P = nothing
     Q = nothing
     #Run the linear optimization
-    optimum = spop.linprog(c=c, A_eq = A, b_eq = b)
+    optimum = scipy_opt.linprog(c=c, A_eq = A, b_eq = b)
     cost = optimum["fun"]
 end
 
