@@ -1,5 +1,7 @@
 #This code implements the "Sinkhorn algorithm" as it is described in the wonderful paper of Cuturi: "Sinkhorn Distances: Lightspeed Computation of Optimal Transport"
 
+using StatsBase
+
 include("histo_unwrap_kantorovich.jl")
 
 function solve_sinkhorn(eps::Real, H1::Histogram, H2::Histogram)
