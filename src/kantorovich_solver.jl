@@ -1,6 +1,7 @@
 #We will make use of the linear optimization solver provided within the scipy.optimize package.
 using PyCall
 spop = pyimport("scipy.optimize")
+using StatsBase
 
 include("cost_functions.jl")
 include("histo_unwrap_kantorovich.jl")
