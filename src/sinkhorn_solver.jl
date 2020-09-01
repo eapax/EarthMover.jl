@@ -46,7 +46,7 @@ end
 #(b) The two histograms have the same edge sets.
 #Note: this function is also written ONLY for the special case that H1 and H2 are formed from samples of the same size. This is due to Julia's preference for storing Histogram weights in Int64 format.
 
-function csolve_sinkhorn(H1::Histogram, H2::Histogram)
+function csolve_sinkhorn(eps::Real, H1::Histogram, H2::Histogram)
     @assert H1.edges == H2.edges
     @assert sum(H1.weights) == sum(H2.weights)
     mydiff = H1.weights - H2.weights
@@ -57,5 +57,5 @@ function csolve_sinkhorn(H1::Histogram, H2::Histogram)
     lambda = sum(histplus.weights) / sum(H1.weights)
     H1 = nothing
     H2 = nothing
-    cost = lambda*solve_sinkhorn(histplus,histminus)
+    cost = lambda*solve_sinkhorn(eps, histplus, histminus)
 end
