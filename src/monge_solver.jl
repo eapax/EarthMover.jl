@@ -1,4 +1,5 @@
 using Hungarian
+using StatsBase
 include("cost_functions.jl")
 include("histo_unwrap_monge.jl")
 
