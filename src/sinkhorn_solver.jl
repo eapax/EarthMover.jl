@@ -46,7 +46,7 @@ end
 #(b) The two histograms have the same edge sets.
 #Note: this function is also written ONLY for the special case that H1 and H2 are formed from samples of the same size. This is due to Julia's preference for storing Histogram weights in Int64 format.
 
-function csolve_kantorovich(H1::Histogram, H2::Histogram, eps::Real=0.125)
+function csolve_sinkhorn(H1::Histogram, H2::Histogram, eps::Real=0.125)
     if H1 == H2
         0.0
     else
