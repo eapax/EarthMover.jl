@@ -9,12 +9,20 @@ using EarthMover, StatsBase, Test
     H1 = fit(Histogram, data1, edges)
     H2 = fit(Histogram, data2, edges)
     x = solve_kantorovich(H1,H2)
+    #First test positive definiteness
+    @test solve_kantorovich(H1,H1)≈0.0 atol=0.0001 
+    @test csolve_kantorovich(H1,H1)==0.0
+    @test solve_monge(H1,H1)==0.0
+    @test csolve_monge(H1,H1)==0.0
+    @test solve_sinkhorn(H1,H1)≈0.0 atol=0.01
+    @test csolve_sinkhorn(H1,H1)==0.0
+    #Now test for exact values
     @test x ≈ 0.75 atol=0.001
     @test x ≈ csolve_kantorovich(H1,H2)  atol=0.001
     @test x ≈ solve_monge(H1, H2)  atol=0.001
     @test solve_monge(H1, H2) ≈ csolve_monge(H1, H2)  atol=0.001
-    @test x ≈ solve_sinkhorn(epsilon, H1, H2)  atol=0.01
-    @test solve_sinkhorn(epsilon, H1, H2) ≈ csolve_sinkhorn(epsilon, H1, H2)  atol=0.001
+    @test x ≈ solve_sinkhorn(H1, H2, epsilon)  atol=0.01
+    @test solve_sinkhorn(H1, H2, epsilon) ≈ csolve_sinkhorn(H1, H2, epsilon)  atol=0.001
 end
 
 #The following 3d example can also be solved by hand, giving Wass1(H1,H2)=2/3
@@ -30,8 +38,8 @@ end
     @test x ≈ csolve_kantorovich(H1,H2)  atol=0.001
     @test x ≈ solve_monge(H1, H2)  atol=0.001
     @test solve_monge(H1, H2) ≈ csolve_monge(H1, H2)  atol=0.001
-    @test x ≈ solve_sinkhorn(epsilon, H1, H2)  atol=0.01
-    @test solve_sinkhorn(epsilon, H1, H2) ≈ csolve_sinkhorn(epsilon, H1, H2) atol=0.001
+    @test x ≈ solve_sinkhorn(H1, H2, epsilon)  atol=0.01
+    @test solve_sinkhorn(H1, H2, epsilon) ≈ csolve_sinkhorn(H1, H2, epsilon) atol=0.001
 end
 
 #Actually, the above example was really 2D, so lets also check the 2D solver with it
@@ -47,8 +55,8 @@ end
     @test x ≈ csolve_kantorovich(H1,H2)  atol=0.001
     @test x ≈ solve_monge(H1, H2)  atol=0.001
     @test solve_monge(H1, H2) ≈ csolve_monge(H1, H2)  atol=0.001
-    @test x ≈ solve_sinkhorn(epsilon, H1, H2)  atol=0.01
-    @test solve_sinkhorn(epsilon, H1, H2) ≈ csolve_sinkhorn(epsilon, H1, H2) atol=0.001
+    @test x ≈ solve_sinkhorn(H1, H2, epsilon)  atol=0.01
+    @test solve_sinkhorn(H1, H2, epsilon) ≈ csolve_sinkhorn(H1, H2, epsilon) atol=0.001
 end
 
 #Now for a 1D example. It can be checked by hand that Wass1(H1,H2)=0.12. This one is important as it is the first non-square problem for Kantorovich (i.e m!=n)
@@ -64,8 +72,8 @@ end
     @test x ≈ csolve_kantorovich(H1,H2)  atol=0.001
     @test x ≈ solve_monge(H1, H2)  atol=0.001
     @test solve_monge(H1, H2) ≈ csolve_monge(H1, H2)  atol=0.001
-    @test x ≈ solve_sinkhorn(epsilon, H1, H2)  atol=0.01
-    @test solve_sinkhorn(epsilon, H1, H2) ≈ csolve_sinkhorn(epsilon, H1, H2) atol=0.001
+    @test x ≈ solve_sinkhorn(H1, H2, epsilon)  atol=0.01
+    @test solve_sinkhorn(H1, H2, epsilon) ≈ csolve_sinkhorn(H1, H2, epsilon) atol=0.001
 end
 
 #Now some randomized examples for good measure!
@@ -82,8 +90,8 @@ end
     @test x ≈ csolve_kantorovich(H1,H2)  atol=0.01 rtol=0.01
     @test x ≈ solve_monge(H1, H2)  atol=0.01 rtol=0.01
     @test solve_monge(H1, H2) ≈ csolve_monge(H1, H2)  atol=0.01 rtol=0.01
-    @test x ≈ solve_sinkhorn(epsilon, H1, H2)  atol=0.2 rtol=0.1
-    @test solve_sinkhorn(epsilon, H1, H2) ≈ csolve_sinkhorn(epsilon, H1, H2) atol=0.2 rtol=0.1
+    @test x ≈ solve_sinkhorn(H1, H2, epsilon)  atol=0.2 rtol=0.1
+    @test solve_sinkhorn(H1, H2, epsilon) ≈ csolve_sinkhorn(H1, H2, epsilon) atol=0.2 rtol=0.1
 end
 
 #2D
@@ -98,8 +106,8 @@ end
     @test x ≈ csolve_kantorovich(H1,H2)  atol=0.01 rtol=0.01
     @test x ≈ solve_monge(H1, H2)  atol=0.01 rtol=0.01
     @test solve_monge(H1, H2) ≈ csolve_monge(H1, H2)  atol=0.01 rtol=0.01
-    @test x ≈ solve_sinkhorn(epsilon, H1, H2)  atol=0.2 rtol=0.1
-    @test solve_sinkhorn(epsilon, H1, H2) ≈ csolve_sinkhorn(epsilon, H1, H2) atol=0.2 rtol=0.1
+    @test x ≈ solve_sinkhorn(H1, H2, epsilon)  atol=0.2 rtol=0.1
+    @test solve_sinkhorn(H1, H2, epsilon) ≈ csolve_sinkhorn(H1, H2, epsilon) atol=0.2 rtol=0.1
 end
 
 #3D
@@ -114,6 +122,6 @@ end
     @test x ≈ csolve_kantorovich(H1,H2)  atol=0.01 rtol=0.01
     @test x ≈ solve_monge(H1, H2)  atol=0.01 rtol=0.01
     @test solve_monge(H1, H2) ≈ csolve_monge(H1, H2)  atol=0.01 rtol=0.01
-    @test x ≈ solve_sinkhorn(epsilon, H1, H2)  atol=0.2 rtol=0.1
-    @test solve_sinkhorn(epsilon, H1, H2) ≈ csolve_sinkhorn(epsilon, H1, H2) atol=0.2 rtol=0.1
+    @test x ≈ solve_sinkhorn(H1, H2, epsilon)  atol=0.2 rtol=0.1
+    @test solve_sinkhorn(H1, H2, epsilon) ≈ csolve_sinkhorn(H1, H2, epsilon) atol=0.2 rtol=0.1
 end
