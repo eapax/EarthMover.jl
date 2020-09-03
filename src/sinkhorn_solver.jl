@@ -57,5 +57,5 @@ function csolve_sinkhorn(H1::Histogram, H2::Histogram, eps::Real=0.125)
     lambda = sum(histplus.weights) / sum(H1.weights)
     H1 = nothing
     H2 = nothing
-    cost = lambda*solve_sinkhorn(histplus, histminus, eps=0.125)
+    cost = lambda*solve_sinkhorn(histplus, histminus, eps)
 end
