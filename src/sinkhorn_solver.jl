@@ -46,16 +46,20 @@ end
 #(b) The two histograms have the same edge sets.
 #Note: this function is also written ONLY for the special case that H1 and H2 are formed from samples of the same size. This is due to Julia's preference for storing Histogram weights in Int64 format.
 
-function csolve_sinkhorn(H1::Histogram, H2::Histogram, eps::Real=0.125)
-    @assert H1.edges == H2.edges
-    @assert sum(H1.weights) == sum(H2.weights)
-    mydiff = H1.weights - H2.weights
-    histplus = deepcopy(H1)
-    histminus = deepcopy(H1)
-    histplus.weights = (mydiff.>=0).*mydiff
-    histminus.weights = -(mydiff.<=0).*mydiff
-    lambda = sum(histplus.weights) / sum(H1.weights)
-    H1 = nothing
-    H2 = nothing
-    cost = lambda*solve_sinkhorn(histplus, histminus, eps)
+function csolve_kantorovich(H1::Histogram, H2::Histogram, eps::Real=0.125)
+    if H1 == H2
+        0.0
+    else
+        @assert H1.edges == H2.edges
+        @assert sum(H1.weights) == sum(H2.weights)
+        mydiff = H1.weights - H2.weights
+        histplus = deepcopy(H1)
+        histminus = deepcopy(H1)
+        histplus.weights = (mydiff.>=0).*mydiff
+        histminus.weights = -(mydiff.<=0).*mydiff
+        lambda = sum(histplus.weights) / sum(H1.weights)
+        H1 = nothing
+        H2 = nothing
+        cost = lambda*solve_sinkhorn(histplus, histminus, eps)
+    end
 end
