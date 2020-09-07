@@ -10,7 +10,7 @@ using EarthMover, StatsBase, Test
     H2 = fit(Histogram, data2, edges)
     x = solve_kantorovich(H1,H2)
     #First test positive definiteness
-    @test solve_kantorovich(H1,H1)≈0.0 atol=0.0001 
+    @test solve_kantorovich(H1,H1)≈0.0 atol=0.0001
     @test csolve_kantorovich(H1,H1)==0.0
     @test solve_monge(H1,H1)==0.0
     @test csolve_monge(H1,H1)==0.0
@@ -124,4 +124,15 @@ end
     @test solve_monge(H1, H2) ≈ csolve_monge(H1, H2)  atol=0.01 rtol=0.01
     @test x ≈ solve_sinkhorn(H1, H2, epsilon)  atol=0.2 rtol=0.1
     @test solve_sinkhorn(H1, H2, epsilon) ≈ csolve_sinkhorn(H1, H2, epsilon) atol=0.2 rtol=0.1
+end
+
+
+#Finally, test the psolve_monge functionality
+
+#Make up some planar data for with the Wasserstein distance can be easily computed as 1
+@testset "check psolve_monge" begin
+    X = [(1.0, 3.0), (3.0, 5.0), (5.0, 1.0)]
+    Y = [(0.0, 3.0), (3.0, 6.0), (6.0, 1.0)]
+    @test psolve_monge(X, X) == 0.0
+    @test psolve_monge(X, Y) == 1.0
 end
