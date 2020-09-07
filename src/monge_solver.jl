@@ -42,3 +42,12 @@ function csolve_monge(H1::Histogram, H2::Histogram)
         cost = lambda*solve_monge(histplus, histminus)
     end
 end
+
+#Here is a version of the Hungarian Algorithm which takes as arguments some raw, unbinned data {x_i} & {y_i} and computes the Wasserstein distance between the corresponding discrete measures Sum_i delta_{x_i}
+
+function psolve_monge(X::Array{<:Union{Tuple, Array}, 1}, Y::Array{<:Union{Tuple, Array}, 1})
+    @assert length(X)==length(Y)
+    M = length(X)
+    c = mycost.(X, permutedims(Y))
+    cost = (1/M)*hungarian(c)[2]
+end
