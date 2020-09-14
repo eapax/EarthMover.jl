@@ -3,7 +3,7 @@ using StatsBase
 include("cost_functions.jl")
 include("histo_unwrap_monge.jl")
 
-#Here is a cost-function-agnostic version of the Monge algorithm
+#Here is a cost-function-agnostic version of the Hungarian algorithm
 function solve_monge(H1::Histogram, H2::Histogram)
     @assert sum(H1.weights)==sum(H2.weights)
     @assert length(H1.edges)==length(H2.edges)
@@ -21,7 +21,7 @@ function solve_monge(H1::Histogram, H2::Histogram)
     cost = (1/M)*hungarian(costmatrix)[2]
 end
 
-#Here is a version of the Monge algorithm which takes advantage of a cancellation step.
+#Here is a version of the Hungarian algorithm which takes advantage of a cancellation step.
 #This can be applied iff:
 #(a) The cost function satisfies c(x,x)=0 and c(x,y)<=c(x,z)+c(z,x) for all x,y,z. For example if c is a metric.
 #(b) The two histograms have the same edge sets.
