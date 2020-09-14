@@ -2,7 +2,7 @@
 
 # EarthMover.jl
 
-This is a package for computing optimal transport distances, such as the Wasserstein distances, between probability measures.
+A package for computing optimal transport distances, such as the Wasserstein distances, between probability measures.
 
 These distances are motivated by thinking of probability measures as mass distributions. The distance between two probability measures p and q is defined as the lowest cost at which one can transport mass from distribution p to distribution q---having introduced a *cost function* c(x,y) which defines the cost to move unit mass from x to y. The case c(x,y)=|x-y|^p defines the p-Wasserstein distance.
 
