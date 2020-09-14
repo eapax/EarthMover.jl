@@ -15,10 +15,10 @@ There are two distinct methods for the exact computation of optimal transport di
 Specifically, this package exports functions to compute optimal transport distances by implementing one of the following methods "under-the-hood":
 
 1) Solution of the assignment problem by the Hungarian algorithm (by calling the native Julia dependancy Hungarian.jl)
-2) Solution of the linear optimization problem (by calling the well-optimized Python optimization package scipy.optimize.linprog, via PyCall.jl)
+2) Solution of the linear optimization problem (by calling the Python optimization function scipy.optimize.linprog via PyCall.jl)
 3) Approximate solution of the linear optimization problem by the Sinkhorn algorithm as described in [2] (implemented here in native Julia, without any dependencies).
 
-Note that 1 and 2 give *exact* computation of optimal transport distances, whilst 3 gives an *approximate* computation (but is often much faster than 1 or 2). Which of the methods 1, 2 and 3 is most appropriate will depend on the particular problem at hand. 
+Note that 1 and 2 give *exact* computation of optimal transport distances, whilst 3 gives an *approximate* computation (often much faster than 1 or 2). Which method, 1, 2 or 3, is most appropriate will depend on the problem at hand. 
 
 ## Usage
 
