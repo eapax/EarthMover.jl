@@ -1,5 +1,15 @@
 using EarthMover, StatsBase, Test
 
+#Firstly, test the solve_monge functionality for sampled data
+#Make up some planar data for with the Wasserstein distance can be easily computed as 1
+@testset "check solve_monge" begin
+    X = [(1.0, 3.0), (3.0, 5.0), (5.0, 1.0)]
+    Y = [(0.0, 3.0), (3.0, 6.0), (6.0, 1.0)]
+    @test solve_monge(X, X) == 0.0
+    @test solve_monge(X, Y) == 1.0
+end
+
+#Now we move on to histograms.
 #The following 3d example can be solved by hand, giving Wass1(H1,H2)=0.75
 @testset "First 3D exactly computable example" begin
     data1 = ([1,2,4,4],[2,2,4,1],[1,1,1,2])
@@ -124,15 +134,4 @@ end
     @test solve_monge(H1, H2) ≈ csolve_monge(H1, H2)  atol=0.01 rtol=0.01
     @test x ≈ solve_sinkhorn(H1, H2, epsilon)  atol=0.2 rtol=0.1
     @test solve_sinkhorn(H1, H2, epsilon) ≈ csolve_sinkhorn(H1, H2, epsilon) atol=0.2 rtol=0.1
-end
-
-
-#Finally, test the psolve_monge functionality
-
-#Make up some planar data for with the Wasserstein distance can be easily computed as 1
-@testset "check psolve_monge" begin
-    X = [(1.0, 3.0), (3.0, 5.0), (5.0, 1.0)]
-    Y = [(0.0, 3.0), (3.0, 6.0), (6.0, 1.0)]
-    @test psolve_monge(X, X) == 0.0
-    @test psolve_monge(X, Y) == 1.0
 end
