@@ -3,7 +3,15 @@ using StatsBase
 include("cost_functions.jl")
 include("histo_unwrap_monge.jl")
 
-#Here is a cost-function-agnostic version of the Hungarian algorithm
+#Here is a version of the Hungarian Algorithm which takes as arguments some raw, unbinned data {x_i} & {y_i} (of the same samplesize) and computes the Wasserstein distance between the corresponding discrete measures Sum_i delta_{x_i} and Sum_i delta_{y_i}.
+function solve_monge(X::Array{<:Union{Tuple, Array}, 1}, Y::Array{<:Union{Tuple, Array}, 1})
+    @assert length(X)==length(Y)
+    M = length(X)
+    c = mycost.(X, permutedims(Y))
+    cost = (1/M)*hungarian(c)[2]
+end
+
+#Here is a version of the Hungarian algorithm which takes as arguments two Histograms (of the same dimension, maximum dimension 3)
 function solve_monge(H1::Histogram, H2::Histogram)
     @assert sum(H1.weights)==sum(H2.weights)
     @assert length(H1.edges)==length(H2.edges)
@@ -41,13 +49,4 @@ function csolve_monge(H1::Histogram, H2::Histogram)
         H2 = nothing
         cost = lambda*solve_monge(histplus, histminus)
     end
-end
-
-#Here is a version of the Hungarian Algorithm which takes as arguments some raw, unbinned data {x_i} & {y_i} and computes the Wasserstein distance between the corresponding discrete measures Sum_i delta_{x_i}
-
-function psolve_monge(X::Array{<:Union{Tuple, Array}, 1}, Y::Array{<:Union{Tuple, Array}, 1})
-    @assert length(X)==length(Y)
-    M = length(X)
-    c = mycost.(X, permutedims(Y))
-    cost = (1/M)*hungarian(c)[2]
 end
