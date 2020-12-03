@@ -4,6 +4,33 @@ using StatsBase
 
 include("histo_unwrap_kantorovich.jl")
 
+#Implement Sinkhorn's algorithm.
+function run_sinkhorn_algorithm(P, Q, c, eps)
+    m = length(P)
+    n = length(Q)
+    K = exp.(-(1/eps).*c)
+    
+    function F(v)
+        P.*((K*v).^(-1))
+    end
+    function G(u)
+        Q.*((K'*u).^(-1))
+    end
+    
+    #Now solve the equations u=F(v), v=G(u) by fixed-point iteration.
+    u = ones(m)
+    e = 1
+    while e > .0001
+        w = deepcopy(u)
+        u = F(G(u))
+        e = norm(u-w)
+    end
+    v = G(u)
+    
+    #compute cost = sum_{i,j} c[i,j] π[i,j] = sum_{i,j} c[i,j] u[i] K[i,j] v[i]
+    cost = dot(u, (K.*c)*v)
+end
+    
 function solve_sinkhorn(H1::Histogram, H2::Histogram, eps::Real=0.125)
     @assert eps>0
     @assert length(H1.edges)==length(H2.edges)<=3
@@ -17,30 +44,10 @@ function solve_sinkhorn(H1::Histogram, H2::Histogram, eps::Real=0.125)
     if m==3
         (P,Q,c) = make_probcost_vectors3d(H1,H2)
     end
-    m = length(P)
-    n = length(Q)
-    K = exp.(-(1/eps).*c)
-
-    function F(v)
-        P.*((K*v).^(-1))
-    end
-    function G(u)
-        Q.*((K'*u).^(-1))
-    end
-    #Now solve the equations u=F(v), v=G(u) by fixed-point iteration.
-    u = ones(m)
-    e = 1
-    while e > .0001
-        w = deepcopy(u)
-        u = F(G(u))
-        e = norm(u-w)
-    end
-    v = G(u)
-    #compute cost = sum_{i,j} c[i,j] π[i,j] = sum_{i,j} c[i,j] u[i] K[i,j] v[i]
-    cost = dot(u, (K.*c)*v)
+    run_sinkhorn_algorithm(P, Q, c, eps)
 end
 
-#Here is a version of the Sinkhorn algorithm which takes advantage of a cancellation step.
+#Here is a version which takes advantage of a cancellation step.
 #This can be applied iff:
 #(a) The cost function satisfies c(x,x)=0 and c(x,y)<=c(x,z)+c(z,x) for all x,y,z. For example if c is a metric.
 #(b) The two histograms have the same edge sets.
