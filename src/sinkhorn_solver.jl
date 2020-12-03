@@ -4,7 +4,7 @@ using StatsBase
 include("histo_unwrap_kantorovich.jl")
 
 #Implement Sinkhorn's algorithm.
-function run_sinkhorn_algorithm(P::Array{:<Real, 1}, Q::Array{:<Real, 1}, c::Array{:<Real, 2}, eps::Real)
+function run_sinkhorn_algorithm(P, Q, c, eps)
     m = length(P)
     n = length(Q)
     K = exp.(-(1/eps).*c)
@@ -34,8 +34,10 @@ end
 function solve_sinkhorn(X::Array{<:Union{Tuple, Array}, 1}, Y::Array{<:Union{Tuple, Array}, 1}, eps::Real=0.125)
     @assert eps>0
     c = mycost.(X, permutedims(Y)) 
-    P = ones(length(X)) 
-    Q = ones(length(Y))
+    m = length(X) 
+    n = length(Y)
+    P = ones(m) / m 
+    Q = ones(n) / n
     run_sinkhorn_algorithm(P, Q, c, eps)
 end
 

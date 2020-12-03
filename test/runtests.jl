@@ -1,4 +1,8 @@
-using EarthMover, StatsBase, Test
+#include("../src/sinkhorn_solver.jl")
+#include("../src/monge_solver.jl")
+#include("../src/kantorovich_solver.jl")
+using EarthMover
+using StatsBase, Test
 
 #Firstly, test the solve_monge functionality for sampled data
 #Make up some planar data for with the Wasserstein distance can be easily computed as 1
