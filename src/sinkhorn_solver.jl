@@ -1,11 +1,10 @@
 #This code implements the "Sinkhorn algorithm" as it is described in the wonderful paper of Cuturi: "Sinkhorn Distances: Lightspeed Computation of Optimal Transport"
 
 using StatsBase
-
 include("histo_unwrap_kantorovich.jl")
 
 #Implement Sinkhorn's algorithm.
-function run_sinkhorn_algorithm(P, Q, c, eps)
+function run_sinkhorn_algorithm(P::Array{:<Real, 1}, Q::Array{:<Real, 1}, c::Array{:<Real, 2}, eps::Real)
     m = length(P)
     n = length(Q)
     K = exp.(-(1/eps).*c)
@@ -30,7 +29,17 @@ function run_sinkhorn_algorithm(P, Q, c, eps)
     #compute cost = sum_{i,j} c[i,j] π[i,j] = sum_{i,j} c[i,j] u[i] K[i,j] v[i]
     cost = dot(u, (K.*c)*v)
 end
-    
+
+#This method computes the Sinkhorn divergence between two arrays of raw, unbinned data. 
+function solve_sinkhorn(X::Array{<:Union{Tuple, Array}, 1}, Y::Array{<:Union{Tuple, Array}, 1}, eps::Real=0.125)
+    @assert eps>0
+    c = mycost.(X, permutedims(Y)) 
+    P = ones(length(X)) 
+    Q = ones(length(Y))
+    run_sinkhorn_algorithm(P, Q, c, eps)
+end
+
+#This method computes the Sinkhorn divergence between two histograms on R^d for d = 1, 2, or 3.  
 function solve_sinkhorn(H1::Histogram, H2::Histogram, eps::Real=0.125)
     @assert eps>0
     @assert length(H1.edges)==length(H2.edges)<=3

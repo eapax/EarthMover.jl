@@ -5,8 +5,11 @@ using EarthMover, StatsBase, Test
 @testset "check solve_monge" begin
     X = [(1.0, 3.0), (3.0, 5.0), (5.0, 1.0)]
     Y = [(0.0, 3.0), (3.0, 6.0), (6.0, 1.0)]
+    epsilon = 0.01
     @test solve_monge(X, X) == 0.0
     @test solve_monge(X, Y) == 1.0
+    @test solve_sinkhorn(X, X, epsilon) ≈ 0.0 atol=0.01
+    @test solve_sinkhorn(X, Y, epsilon) ≈ 1.0 atol=0.01
 end
 
 #Now we move on to histograms.
