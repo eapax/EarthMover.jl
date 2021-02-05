@@ -28,6 +28,7 @@ use an alternative package such as `scipy.stats.wasserstein_distance` for Python
 Approach 1 can be called through `solve_monge` on a pair of raw data sets of the same length, computing the WD between the corresponding empirical distributions. For example, using some 2D data
 
 ```julia
+julia> using EarthMover
 julia> X = [(2.0, 3.0), (4.0, 5.0), (6.0, 1.0)]
 julia> Y = [(1.0, 3.0), (4.0, 6.0), (7.0, 1.0)]
 julia> solve_monge(X, Y)
