@@ -37,8 +37,10 @@ will return `1.0` which is easily checked by hand. The data can alternatively be
 ```julia
 julia> using StatsBase
 julia> edges = (0:10, 0:10)
-julia> H1 = fit(Histogram, X, edges)
-julia> H2 = fit(Histogram, Y, edges)
+julia> Xdata = ([2.0, 4.0, 6.0], [3.0, 5.0, 1.0])
+julia> Ydata = ([1.0, 4.0, 7.0], [3.0, 6.0, 1.0])
+julia> H1 = fit(Histogram, Xdata, edges)
+julia> H2 = fit(Histogram, Ydata, edges)
 julia> solve_kantorovich(H1, H2)
 ```
 
