@@ -6,7 +6,7 @@ A package for computing optimal transport distances, such as the Wasserstein dis
 
 These distances are motivated by thinking of probability measures as mass distributions. The distance between two probability measures p and q is defined as the lowest cost at which one can transport mass from distribution p to distribution q---having introduced a *cost function* c(x,y) which defines the cost to move unit mass from x to y. The case c(x,y)=|x-y|^p defines the p-Wasserstein distance.
 
-Wasserstein distances are a natural way to compare between probability measures. Indeed, a famous theorem says that the Wasserstein distance *metrizes* the space of probability measures ([1, Theorem 7.3]). But computation of these distances leads to challenges.
+Wasserstein distances are a natural way to compare probability measures. Indeed, a famous theorem says that the Wasserstein distance *metrizes* the space of probability measures ([1, Theorem 7.3]). But computation of these distances leads to challenges.
 
 This package exports functions to compute distances via one of the following approaches:
 
@@ -62,12 +62,14 @@ and may provide significant speed-ups for epsilon not too small [2].
 
 Currently `solve_kantorovich` and `solve_sinkhorn` only accept histograms of dimension 1, 2, or 3. 
 This is somewhat intentional since for high-dimensional data-sets binning becomes inefficient, 
-so working with empirical distributions directly through `solve_monge` or `solve_sinkhorn` is likely a better strategy.
-This can be a powerful method for dealing with high-dimensional distributions, provided a pair of 
-samples can be drawn from the distributions.
+and working with empirical distributions directly through `solve_monge` or `solve_sinkhorn` is likely a better strategy.
+
+Drawing samples from the distributions and computing Wasserstein distances between the corresponding empirical 
+distributions might be thought of as a type of Monte-Carlo approximation, and
+can be a powerful method for dealing with high-dimensional distributions, provided a pair of 
+samples can be drawn.
 Note, however, that the WD suffers from a "curse of dimensionality" in this context, 
 while the SD may not [3].
-
 
 ## Installation
 
