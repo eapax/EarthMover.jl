@@ -1,5 +1,3 @@
-[![Build Status](https://travis-ci.com/eapax/EarthMover.jl.svg?branch=master)](https://travis-ci.com/eapax/EarthMover.jl)
-
 # EarthMover.jl
 
 A package for computing optimal transport distances, such as the Wasserstein distances (WDs), between probability measures.
@@ -22,6 +20,8 @@ Also note that for one dimensional data sets there exists an explicit formula fo
 which can be computed extremely fast, but this is not yet implemented here.
 Thus for 1D data it is much better to 
 use an alternative package such as `scipy.stats.wasserstein_distance` for Python.
+
+Note, this package has only been properly tested with Linux.
 
 ## Usage
 
